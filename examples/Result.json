@@ -1,0 +1,36 @@
+{
+  "analysis_summary": {
+    "can_mint_new_tokens": false,
+    "can_self_destruct": false,
+    "does_make_external_call": false,
+    "external_call_on_balance": false,
+    "obfuscated_code": true,
+    "hidden_owner": false,
+    "owner_can_change_balance": true,
+    "blacklist": false,
+    "whitelist": true,
+    "cooldown": false,
+    "pause_transfer_ability": true,
+    "anti_whale_mechanism": false,
+    "retrievable_ownership": false,
+    "owner_can_change_fees": false
+  },
+  "detailed_analysis": {
+    "owner_can_change_balance": {
+      "status": "Detected",
+      "description": "The function 'Airdrop' allows the 'owner' to arbitrarily decrease the balance of ANY address ('from' parameter) and transfer those tokens to others. This allows the owner to drain user wallets or rug pull specific holders."
+    },
+    "pause_transfer_ability": {
+      "status": "Detected",
+      "description": "Two mechanisms detected: 1) The 'openTrading' function allows the owner to toggle the 'openedTrade' boolean back and forth, enabling/disabling trading repeatedly. 2) A malicious gas price check exists in '_transferBf'. When selling ('to == uniswapV2Pair'), if 'openedTrade' is true, it enforces 'mingas' (set to 5 wei). Since standard transaction gas prices are always higher than 5 wei, this logic forces a revert, effectively permanently pausing sell ability (Honeypot)."
+    },
+    "obfuscated_code": {
+      "status": "Detected",
+      "description": "The contract uses obscure function names 'da51423' and '_transferBf' to hide malicious logic. These functions implement a gas price check ('tx.gasprice > _gas') that is designed to revert transactions silently, masking the honeypot mechanism from basic automated scanners."
+    },
+    "whitelist": {
+      "status": "Detected",
+      "description": "The '_excludeTax' mapping serves as a whitelist. Addresses in this list bypass the 'openedTrade' requirement and the malicious gas price checks, allowing the owner/deployer to sell while regular users cannot."
+    }
+  }
+}
