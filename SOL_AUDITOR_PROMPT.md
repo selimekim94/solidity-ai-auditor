@@ -222,15 +222,16 @@ Ownership transfer mechanisms that allow the previous owner to regain control af
 - Flag time-delayed ownership recovery mechanisms
 - Flag functions that can reassign ownership back to specific addresses
 
-14. **owner_can_change_fees**  
-    **Definition**: Any mechanism that allows the owner or a privileged address to modify buy fees, sell fees, transfer fees, or any tax applied on transactions after deployment.  
-    **Detection Rules (name-agnostic)**:
-    - Search for any state variables (uint, uint256, etc.) that store fee percentages or basis points for buy, sell, or transfer.
-    - Identify any function (regardless of name) that writes to these fee variables.
-    - Check access control: is the function restricted to owner, hidden owner, or a privileged role?
-    - Check if fees can be increased arbitrarily after launch (classic rug-pull pattern).
-    - Check if the owner or privileged addresses are exempt from these fees while regular users are not.
-    - Even if initial fees are low or zero, the ability to raise them later triggers this flag.
+### 14. owner_can_change_fees 
+Any mechanism that allows the owner or a privileged address to modify buy fees, sell fees, transfer fees, or any tax applied on transactions after deployment.  
+
+**Detection Rules:**
+- Search for any state variables (uint, uint256, etc.) that store fee percentages or basis points for buy, sell, or transfer.
+- Identify any function (regardless of name) that writes to these fee variables.
+- Check access control: is the function restricted to owner, hidden owner, or a privileged role?
+- Check if fees can be increased arbitrarily after launch (classic rug-pull pattern).
+- Check if the owner or privileged addresses are exempt from these fees while regular users are not.
+- Even if initial fees are low or zero, the ability to raise them later triggers this flag.
 
 ---
 
